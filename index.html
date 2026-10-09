@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Miracle Receipt Artisan</title>
+    <style>
+        :root {
+            --g: #0B6B4B;
+            --gd: #C9962B;
+            --bg: #F2F4F1;
+            --ink: #17231E;
+            --mut: #5B6B64;
+            --bad: #A33A1E
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: system-ui, "Segoe UI", Roboto, sans-serif
+        }
+
+        header {
+            background: var(--g);
+            color: #fff;
+            padding: 14px 20px
+        }
+
+        header b {
+            font-size: 19px
+        }
+
+        header small {
+            display: block;
+            color: var(--gd);
+            font-size: 12px
+        }
+
+        nav {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px
+        }
+
+        nav button {
+            background: transparent;
+            color: #D6EBE2;
+            border: 0;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font: 600 14px inherit;
+            cursor: pointer;
+            min-height: 44px
+        }
+
+        nav button.on {
+            background: var(--gd);
+            color: #0B3D2B
+        }
+
+        main {
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .07);
+            margin-bottom: 16px
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap
+        }
+
+        .row>* {
+            flex: 1;
+            min-width: 260px
+        }
+
+        .stat {
+            min-width: 170px
+        }
+
+        .stat small {
+            color: var(--mut);
+            display: block
+        }
+
+        .stat b {
+            font-size: 22px
+        }
+
+        h2 {
+            margin: 0 0 12px;
+            font-size: 20px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px
+        }
+
+        th {
+            text-align: left;
+            color: var(--mut);
+            font-size: 12px;
+            padding: 6px
+        }
+
+        td {
+            padding: 10px 6px;
+            border-top: 1px solid #E5EAE6
+        }
+
+        .r {
+            text-align: right
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #CBD5CF;
+            border-radius: 8px;
+            font: inherit;
+            min-height: 44px
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--mut);
+            display: block;
+            margin: 8px 0 3px
+        }
+
+        .btn {
+            background: var(--g);
+            color: #fff;
+            border: 0;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font: 700 14px inherit;
+            cursor: pointer;
+            min-height: 44px
+        }
+
+        .btn.o {
+            background: #fff;
+            color: var(--g);
+            border: 1px solid var(--g)
+        }
+
+        .btn.s {
+            padding: 6px 10px;
+            min-height: 34px;
+            font-size: 13px
+        }
+
+        .btn.d {
+            background: var(--bad)
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px
+        }
+
+        .p {
+            background: #F2F8F5;
+            border: 1px solid #D5E6DD;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: left;
+            cursor: pointer;
+            font: inherit
+        }
+
+        .p:disabled {
+            opacity: .45;
+            cursor: not-allowed
+        }
+
+        .p b {
+            display: block;
+            font-size: 14px
+        }
+
+        .p span {
+            font-size: 12px;
+            color: var(--mut)
+        }
+
+        .bad {
+            color: var(--bad);
+            font-weight: 700
+        }
+
+        .ok {
+            color: var(--g);
+            font-weight: 700
+        }
+
+        .warn {
+            color: #8A5A00;
+            font-weight: 700
+        }
+
+        .tot div {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0
+        }
+
+        .tot .big {
+            font-size: 18px;
+            font-weight: 800
+        }
+
+        #modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            overflow: auto
+        }
+
+        #modal.on {
+            display: flex
+        }
+
+        #rcpt {
+            background: #fff;
+            width: 320px;
+            max-width: 100%;
+            padding: 20px;
+            font-family: "Courier New", monospace;
+            font-size: 13px
+        }
+
+        #rcpt .l {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px
+        }
+
+        #rcpt hr {
+            border: 0;
+            border-top: 1px dashed #000
+        }
+
+        .note {
+            font-size: 12px;
+            color: var(--mut)
+        }
+
+        @media print {
+            body * {
+                visibility: hidden
+            }
+
+            #rcpt,
+            #rcpt * {
+                visibility: visible
+            }
+
+            #modal {
+                position: static;
+                background: none;
+                display: block
+            }
+
+            #rcpt {
+                position: absolute;
+                left: 0;
+                top: 0;
+                box-shadow: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header><b id="bn"></b><small>Smart Receipts. Better Business.</small>
+        <nav id="nav"></nav>
+    </header>
+    <main id="app"></main>
+    <div id="modal"></div>
+    <script>
+        const K = 'mra_v1';
+        const def = () => ({ biz: { name: 'Miracle Receipt Artisan', prefix: 'MRA-', footer: 'Thank you for your patronage.', tax: 0 }, products: [], sales: [], expenses: [], ledger: [], seq: 1, pid: 1 });
+        let S; try { S = JSON.parse(localStorage.getItem(K)) || def() } catch (e) { S = def() }
+        const save = () => { try { localStorage.setItem(K, JSON.stringify(S)) } catch (e) { alert('Could not save data in this browser.') } };
+        const $ = s => document.querySelector(s);
+        const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const N = k => '₦' + (k / 100).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const toK = v => Math.round((parseFloat(v) || 0) * 100);
+        const prod = id => S.products.find(p => p.id === id);
+        const live = () => S.sales.filter(s => !s.void);
+        const dstr = t => new Date(t).toLocaleString('en-NG', { timeZone: 'Africa/Lagos', dateStyle: 'medium', timeStyle: 'short' });
+        let tab = 'dash', cart = [], F = { q: '', disc: '', pay: '', method: 'Cash', cust: '' }, busy = false;
+        const tabs = [['dash', 'Dashboard'], ['pos', 'New Sale'], ['prod', 'Products'], ['rec', 'Receipts'], ['exp', 'Expenses'], ['set', 'Settings']];
+
+        function go(t) { tab = t; render() }
+        function render() {
+            $('#bn').textContent = S.biz.name;
+            $('#nav').innerHTML = tabs.map(t => `<button class="${t[0] == tab ? 'on' : ''}" onclick="go('${t[0]}')">${t[1]}</button>`).join('');
+            $('#app').innerHTML = ({ dash, pos, prodV, rec, exp, set })[tab]();
+            if (tab == 'pos') upd();
+        }
+        /* ---------- Dashboard ---------- */
+        function dash() {
+            const L = live(), now = new Date(), t = now.toDateString();
+            const sum = a => a.reduce((x, s) => x + s.total, 0);
+            const td = L.filter(s => new Date(s.at).toDateString() == t);
+            const mo = L.filter(s => { const d = new Date(s.at); return d.getMonth() == now.getMonth() && d.getFullYear() == now.getFullYear() });
+            const rev = sum(L), tax = L.reduce((x, s) => x + s.tax, 0), cogs = L.reduce((x, s) => x + s.items.reduce((y, i) => y + i.cost * i.qty, 0), 0);
+            const exp = S.expenses.reduce((x, e) => x + e.amt, 0), gross = rev - tax - cogs;
+            const act = S.products.filter(p => !p.arch), inv = act.reduce((x, p) => x + p.cost * p.stock, 0);
+            const low = act.filter(p => p.stock > 0 && p.stock <= p.min), out = act.filter(p => p.stock <= 0);
+            const owed = L.reduce((x, s) => x + (s.total - s.paid), 0);
+            const pm = {}; L.forEach(s => pm[s.method] = (pm[s.method] || 0) + s.paid);
+            const best = {}; L.forEach(s => s.items.forEach(i => best[i.name] = (best[i.name] || 0) + i.qty));
+            const st = (l, v, n = '') => `<div class="card stat"><small>${l}</small><b>${v}</b><small>${n}</small></div>`;
+            return `<div class="row">${st("Today's sales", N(sum(td)), td.length + ' receipts')}${st('This month', N(sum(mo)))}${st('Gross profit (estimate)', N(gross), 'Revenue − tax − cost of goods sold')}${st('Est. net operating profit', N(gross - exp), 'After recorded expenses')}</div>
+ <div class="row">${st('Inventory value (at cost)', N(inv), act.length + ' products')}${st('Low / out of stock', low.length + ' / ' + out.length)}${st('Total expenses', N(exp))}${st('Customer balances owed', N(owed))}</div>
+ <div class="row"><div class="card"><h2>Recent transactions</h2>${L.length ? `<table>${L.slice(-6).reverse().map(s => `<tr><td>${s.no}</td><td>${esc(s.cust || 'Walk-in')}</td><td class="r">${N(s.total)}</td></tr>`).join('')}</table>` : '<p class="note">No sales yet. Add products, then record a sale.</p>'}</div>
+ <div class="card"><h2>Payments received</h2>${Object.keys(pm).map(k => `<div>${k}: <b>${N(pm[k])}</b></div>`).join('') || '<p class="note">None yet.</p>'}<h2 style="margin-top:14px">Best sellers</h2>${Object.entries(best).sort((a, b) => b[1] - a[1]).slice(0, 5).map(e => `<div>${esc(e[0])}: <b>${e[1]}</b></div>`).join('') || '<p class="note">None yet.</p>'}</div>
+ <div class="card"><h2>Stock alerts</h2>${out.concat(low).map(p => `<div>${esc(p.name)}: <span class="${p.stock <= 0 ? 'bad' : 'warn'}">${p.stock <= 0 ? 'Out of stock' : p.stock + ' left'}</span></div>`).join('') || '<p class="note">No alerts.</p>'}</div></div>`;
+        }
+        /* ---------- POS ---------- */
+        function gridH() {
+            const q = F.q.toLowerCase();
+            const l = S.products.filter(p => !p.arch && (p.name.toLowerCase().includes(q) || (p.sku || '').toLowerCase().includes(q)));
+            return l.map(p => `<button class="p" ${p.stock <= 0 ? 'disabled' : ''} onclick="addC(${p.id})"><b>${esc(p.name)}</b>${N(p.price)}<br><span>${p.stock > 0 ? p.stock + ' in stock' : 'Out of stock'}</span></button>`).join('') || '<p class="note">No products found. Add some under Products.</p>';
+        }
+        function pos() {
+            const rows = cart.map(c => { const p = prod(c.id); return `<tr><td>${esc(p.name)}<br><span class="note">${N(p.price)}</span></td><td><button class="btn o s" onclick="qty(${c.id},-1)">−</button> ${c.qty} <button class="btn o s" onclick="qty(${c.id},1)">+</button></td><td class="r">${N(p.price * c.qty)}</td></tr>` }).join('');
+            return `<div class="row"><div class="card" style="flex:2"><h2>New sale</h2><input id="q" placeholder="Search name or SKU / scan barcode" value="${esc(F.q)}" oninput="F.q=this.value;$('#grid').innerHTML=gridH()"><div class="grid" id="grid">${gridH()}</div></div>
+ <div class="card"><h2>Current sale</h2>${cart.length ? `<table>${rows}</table>` : '<p class="note">Tap a product to add it.</p>'}
+ <label>Customer name (required for credit sales)</label><input value="${esc(F.cust)}" oninput="F.cust=this.value">
+ <label>Discount (₦)</label><input type="number" min="0" value="${esc(F.disc)}" oninput="F.disc=this.value;upd()">
+ <label>Payment method</label><select onchange="F.method=this.value"><option>Cash</option><option>Bank transfer</option><option>POS terminal</option><option>Other</option></select>
+ <label>Amount paid (₦) – leave empty if paid in full</label><input type="number" min="0" value="${esc(F.pay)}" oninput="F.pay=this.value;upd()">
+ <div class="tot" id="tot" style="margin-top:12px"></div>
+ <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="complete()">Complete sale</button><button class="btn o" onclick="if(cart.length&&confirm('Clear the cart?')){cart=[];render()}">Clear</button></div></div></div>`;
+        }
+        function tots() {
+            const sub = cart.reduce((x, c) => x + prod(c.id).price * c.qty, 0), disc = Math.min(toK(F.disc), sub), base = sub - disc;
+            const tax = Math.round(base * S.biz.tax / 100), total = base + tax, pay = F.pay === '' ? total : toK(F.pay);
+            return { sub, disc, tax, total, pay, change: Math.max(0, pay - total), bal: Math.max(0, total - pay) };
+        }
+        function upd() {
+            const t = tots();
+            $('#tot').innerHTML = `<div><span>Subtotal</span><span>${N(t.sub)}</span></div><div><span>Discount</span><span>−${N(t.disc)}</span></div>${S.biz.tax ? `<div><span>Tax (${S.biz.tax}%)</span><span>${N(t.tax)}</span></div>` : ''}<div class="big"><span>Total</span><span>${N(t.total)}</span></div><div><span>Paid</span><span>${N(Math.min(t.pay, t.total))}</span></div><div><span>Change due</span><span>${N(t.change)}</span></div><div><span>Balance owed</span><span class="${t.bal ? 'bad' : ''}">${N(t.bal)}</span></div>`;
+        }
+        function addC(id) { const p = prod(id), c = cart.find(x => x.id == id); if ((c ? c.qty : 0) + 1 > p.stock) return alert('Not enough stock for ' + p.name); c ? c.qty++ : cart.push({ id, qty: 1 }); render() }
+        function qty(id, d) { const c = cart.find(x => x.id == id), p = prod(id); if (c.qty + d > p.stock) return alert('Not enough stock for ' + p.name); c.qty += d; if (c.qty <= 0) cart = cart.filter(x => x.id != id); render() }
+        function complete() {
+            if (busy || !cart.length) return; busy = true;
+            try {
+                for (const c of cart) { const p = prod(c.id); if (!p || c.qty > p.stock) throw new Error('Not enough stock for ' + (p ? p.name : 'a product')) }
+                const t = tots();
+                if (t.bal > 0 && !F.cust.trim()) throw new Error('Enter a customer name for a sale that is not fully paid.');
+                const no = S.biz.prefix + String(S.seq).padStart(6, '0');
+                const sale = {
+                    no, at: Date.now(), cust: F.cust.trim(), method: F.method, sub: t.sub, disc: t.disc, tax: t.tax, total: t.total, paid: Math.min(t.pay, t.total), change: t.change,
+                    items: cart.map(c => { const p = prod(c.id); return { id: p.id, name: p.name, qty: c.qty, price: p.price, cost: p.cost } })
+                };
+                sale.items.forEach(i => { prod(i.id).stock -= i.qty; S.ledger.push({ at: sale.at, pid: i.id, q: -i.qty, why: 'Sale', ref: no }) });
+                S.sales.push(sale); S.seq++; save();
+                cart = []; F = { q: '', disc: '', pay: '', method: 'Cash', cust: '' }; render(); showR(sale, false);
+            } catch (e) { alert(e.message) } finally { busy = false }
+        }
+        /* ---------- Receipts ---------- */
+        function rText(s, dup) {
+            let o = [S.biz.name.toUpperCase(), dup ? '*** DUPLICATE / REPRINT ***' : '', s.void ? '*** VOIDED: ' + s.void.reason + ' ***' : '', 'Receipt: ' + s.no, 'Date: ' + dstr(s.at)];
+            if (s.cust) o.push('Customer: ' + s.cust); o.push('----------------');
+            s.items.forEach(i => o.push(i.name + ' x' + i.qty + '  ' + N(i.price * i.qty)));
+            o.push('----------------', 'Subtotal: ' + N(s.sub)); if (s.disc) o.push('Discount: -' + N(s.disc)); if (s.tax) o.push('Tax: ' + N(s.tax));
+            o.push('TOTAL: ' + N(s.total), s.method + ' paid: ' + N(s.paid)); if (s.change) o.push('Change: ' + N(s.change)); if (s.total > s.paid) o.push('Balance owed: ' + N(s.total - s.paid));
+            o.push('', S.biz.footer); return o.filter((x, i) => x !== '' || i > 0).join('\n');
+        }
+        function showR(s, dup) {
+            const L = (a, b) => `<div class="l"><span>${a}</span><span>${b}</span></div>`;
+            window._r = [s, dup];
+            $('#modal').innerHTML = `<div><div id="rcpt"><div style="text-align:center"><b>${esc(S.biz.name.toUpperCase())}</b>${dup ? '<br><b>*** DUPLICATE / REPRINT ***</b>' : ''}${s.void ? '<br><b>*** VOIDED ***</b>' : ''}</div><hr>${L('Receipt', s.no)}${L('Date', dstr(s.at))}${s.cust ? L('Customer', esc(s.cust)) : ''}<hr>${s.items.map(i => L(esc(i.name) + ' x' + i.qty, N(i.price * i.qty))).join('')}<hr>${L('Subtotal', N(s.sub))}${s.disc ? L('Discount', '−' + N(s.disc)) : ''}${s.tax ? L('Tax', N(s.tax)) : ''}${L('<b>TOTAL</b>', '<b>' + N(s.total) + '</b>')}${L(esc(s.method) + ' paid', N(s.paid))}${s.change ? L('Change', N(s.change)) : ''}${s.total > s.paid ? L('Balance owed', N(s.total - s.paid)) : ''}<hr><div style="text-align:center">${esc(S.biz.footer)}</div></div>
+ <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn" onclick="window.print()">Print / PDF</button><button class="btn o" style="background:#fff" onclick="wa()">WhatsApp</button><button class="btn o" style="background:#fff" onclick="navigator.clipboard.writeText(rText(..._r)).then(()=>alert('Copied'))">Copy</button><button class="btn o" style="background:#fff" onclick="$('#modal').classList.remove('on')">Close</button></div></div>`;
+            $('#modal').classList.add('on');
+        }
+        function wa() { window.open('https://wa.me/?text=' + encodeURIComponent(rText(..._r)), '_blank') }
+        function rec() {
+            const q = (F.rq || '').toLowerCase();
+            const l = S.sales.map((s, i) => [s, i]).filter(([s]) => (s.no + s.cust).toLowerCase().includes(q)).reverse();
+            return `<div class="card"><h2>Receipts</h2><input placeholder="Search receipt number or customer" value="${esc(F.rq || '')}" oninput="F.rq=this.value;$('#rl').innerHTML=recRows()"><table style="margin-top:10px"><thead><tr><th>Receipt</th><th>Customer</th><th>Date</th><th class="r">Total</th><th>Status</th><th></th></tr></thead><tbody id="rl">${recRows()}</tbody></table></div><div class="card"><button class="btn o" onclick="csv('sales')">Export sales CSV</button></div>`;
+        }
+        function recRows() {
+            const q = (F.rq || '').toLowerCase();
+            return S.sales.map((s, i) => [s, i]).filter(([s]) => (s.no + s.cust).toLowerCase().includes(q)).reverse().map(([s, i]) => `<tr><td>${s.no}</td><td>${esc(s.cust || 'Walk-in')}</td><td>${dstr(s.at)}</td><td class="r">${N(s.total)}</td><td>${s.void ? '<span class="bad">Voided</span>' : s.total > s.paid ? '<span class="warn">Part-paid</span>' : '<span class="ok">Paid</span>'}</td><td class="r"><button class="btn o s" onclick="showR(S.sales[${i}],true)">Reprint</button> ${s.void ? '' : `<button class="btn d s" onclick="voidS(${i})">Void</button>`}</td></tr>`).join('') || '<tr><td colspan="6" class="note">No receipts yet.</td></tr>';
+        }
+        function voidS(i) {
+            const s = S.sales[i], r = prompt('Reason for voiding ' + s.no + ' (required). Stock will be returned to inventory, so only continue if the goods are resalable.');
+            if (!r || !r.trim()) return;
+            s.void = { at: Date.now(), reason: r.trim() };
+            s.items.forEach(it => { const p = prod(it.id); if (p) { p.stock += it.qty; S.ledger.push({ at: Date.now(), pid: p.id, q: it.qty, why: 'Void: ' + r.trim(), ref: s.no }) } });
+            save(); render();
+        }
+        /* ---------- Products ---------- */
+        function prodV() {
+            return `<div class="card"><h2>Add product</h2><div class="row"><div><label>Name</label><input id="pn"><label>SKU / barcode</label><input id="ps"></div><div><label>Purchase cost (₦)</label><input id="pc" type="number" min="0"><label>Selling price (₦)</label><input id="pp" type="number" min="0"></div><div><label>Opening stock</label><input id="pq" type="number" min="0" value="0"><label>Low-stock threshold</label><input id="pm" type="number" min="0" value="5"></div></div><button class="btn" style="margin-top:12px" onclick="addP()">Save product</button></div>
+ <div class="card"><h2>Products</h2><table><thead><tr><th>Name</th><th>SKU</th><th class="r">Cost</th><th class="r">Price</th><th class="r">Stock</th><th></th></tr></thead>${S.products.map(p => `<tr style="${p.arch ? 'opacity:.5' : ''}"><td>${esc(p.name)}${p.demo ? ' <span class="note">(demo)</span>' : ''}</td><td>${esc(p.sku || '')}</td><td class="r">${N(p.cost)}</td><td class="r">${N(p.price)}</td><td class="r ${p.stock <= 0 ? 'bad' : p.stock <= p.min ? 'warn' : ''}">${p.stock}</td><td class="r"><button class="btn o s" onclick="adj(${p.id})">Adjust</button> <button class="btn o s" onclick="arch(${p.id})">${p.arch ? 'Restore' : 'Archive'}</button></td></tr>`).join('') || '<tr><td colspan="6" class="note">No products yet.</td></tr>'}</table><div style="margin-top:12px"><button class="btn o" onclick="csv('products')">Export CSV</button></div></div>`;
+        }
+        function addP() {
+            const v = id => $('#' + id).value.trim(), name = v('pn'), sku = v('ps'), price = toK(v('pp')), cost = toK(v('pc')), stock = parseFloat(v('pq')) || 0, min = parseFloat(v('pm')) || 0;
+            if (!name || price <= 0) return alert('Enter a name and a selling price above zero.');
+            if (stock < 0 || cost < 0) return alert('Stock and cost cannot be negative.');
+            if (sku && S.products.some(p => p.sku === sku)) return alert('That SKU is already used.');
+            const p = { id: S.pid++, name, sku, cost, price, stock, min }; S.products.push(p);
+            if (stock) S.ledger.push({ at: Date.now(), pid: p.id, q: stock, why: 'Opening stock', ref: '' });
+            save(); render();
+        }
+        function adj(id) {
+            const p = prod(id), d = parseFloat(prompt('Quantity change for ' + p.name + ' (e.g. 5 or -2):'));
+            if (!d) return; const r = prompt('Reason (required, e.g. damaged, recount):');
+            if (!r || !r.trim()) return alert('A reason is required.');
+            if (p.stock + d < 0) return alert('This would make stock negative.');
+            p.stock += d; S.ledger.push({ at: Date.now(), pid: id, q: d, why: 'Adjustment: ' + r.trim(), ref: '' }); save(); render();
+        }
+        function arch(id) { const p = prod(id); p.arch = !p.arch; save(); render() }
+        /* ---------- Expenses ---------- */
+        function exp() {
+            return `<div class="card"><h2>Record expense</h2><div class="row"><div><label>Description</label><input id="ed"><label>Category</label><select id="ec"><option>Rent</option><option>Electricity</option><option>Transportation</option><option>Salaries</option><option>Internet and phone</option><option>Packaging</option><option>Repairs</option><option>Delivery</option><option>Marketing</option><option>Miscellaneous</option></select></div><div><label>Amount (₦)</label><input id="ea" type="number" min="0"><label>Date</label><input id="et" type="date" value="${new Date().toISOString().slice(0, 10)}"></div></div><button class="btn" style="margin-top:12px" onclick="addE()">Save expense</button></div>
+ <div class="card"><h2>Expenses</h2><table>${S.expenses.slice().reverse().map(e => `<tr><td>${esc(e.desc)}</td><td>${esc(e.cat)}</td><td>${e.date}</td><td class="r">${N(e.amt)}</td></tr>`).join('') || '<tr><td class="note">No expenses yet.</td></tr>'}</table></div>`;
+        }
+        function addE() {
+            const desc = $('#ed').value.trim(), amt = toK($('#ea').value), date = $('#et').value, cat = $('#ec').value;
+            if (!desc || amt <= 0 || !date) return alert('Enter a description, an amount above zero and a date.');
+            if (S.expenses.some(e => e.desc == desc && e.amt == amt && e.date == date) && !confirm('A matching expense already exists. Save anyway?')) return;
+            S.expenses.push({ desc, amt, date, cat }); save(); render();
+        }
+        /* ---------- Settings, CSV, demo ---------- */
+        function set() {
+            const b = S.biz;
+            return `<div class="card"><h2>Business settings</h2><div class="row"><div><label>Business name</label><input id="sn" value="${esc(b.name)}"><label>Receipt prefix</label><input id="sp" value="${esc(b.prefix)}"></div><div><label>Tax rate (%) – leave 0 unless it applies to your business</label><input id="st" type="number" min="0" step="0.1" value="${b.tax}"><label>Receipt footer</label><input id="sf" value="${esc(b.footer)}"></div></div><p class="note">Confirm your tax obligations with a qualified tax professional.</p><button class="btn" onclick="saveS()">Save settings</button></div>
+ <div class="card"><h2>Data</h2><p class="note">All data is stored only in this browser. Export a backup regularly.</p><button class="btn o" onclick="backup()">Download backup (JSON)</button> <button class="btn o" onclick="demo()">Load demo products</button> <button class="btn d" onclick="if(confirm('Delete ALL data in this browser?')){S=def();save();cart=[];render()}">Reset everything</button></div>`;
+        }
+        function saveS() { S.biz = { name: $('#sn').value.trim() || 'My Business', prefix: $('#sp').value.trim(), footer: $('#sf').value, tax: Math.max(0, parseFloat($('#st').value) || 0) }; save(); render() }
+        function demo() {
+            [['Peak Milk 400g', 'PM-400', 1800, 2100, 34], ['Indomie Carton', 'IN-CTN', 7600, 8500, 12], ['Water 75cl Pack', 'WT-75P', 1400, 1800, 60], ['Golden Penny Sugar 1kg', 'GP-SG1', 1400, 1650, 21], ['Titus Sardine', 'TS-125', 950, 1200, 18]].forEach(d => {
+                const p = { id: S.pid++, name: d[0], sku: d[1], cost: d[2] * 100, price: d[3] * 100, stock: d[4], min: 5, demo: true }; S.products.push(p); S.ledger.push({ at: Date.now(), pid: p.id, q: p.stock, why: 'Opening stock (demo)', ref: '' })
+            });
+            save(); render();
+        }
+        function dl(name, text, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click() }
+        function backup() { dl('miracle-receipt-backup.json', JSON.stringify(S), 'application/json') }
+        function csv(w) {
+            const q = v => '"' + String(v).replace(/"/g, '""') + '"';
+            const rows = w == 'products' ? [['Name', 'SKU', 'Cost', 'Price', 'Stock']].concat(S.products.map(p => [p.name, p.sku, p.cost / 100, p.price / 100, p.stock])) : [['Receipt', 'Date', 'Customer', 'Method', 'Total', 'Paid', 'Status']].concat(S.sales.map(s => [s.no, new Date(s.at).toISOString(), s.cust, s.method, s.total / 100, s.paid / 100, s.void ? 'Voided' : 'Final']));
+            dl(w + '.csv', rows.map(r => r.map(q).join(',')).join('\n'), 'text/csv');
+        }
+        render();
+    </script>
+</body>
+
+</html>
